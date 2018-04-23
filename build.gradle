@@ -1,0 +1,56 @@
+buildscript {
+	ext {
+		springBootVersion = '1.5.12.RELEASE'
+	}
+	repositories {
+		maven {
+			url "http://maven.aliyun.com/nexus/content/groups/public";
+		}
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+
+group = 'com.example'
+version = '1.0.0'
+sourceCompatibility = 1.8
+
+repositories {
+    maven {
+			url "http://maven.aliyun.com/nexus/content/groups/public";
+	}
+	mavenCentral()
+}
+
+
+dependencies {
+	compile('org.springframework.boot:spring-boot-starter-data-mongodb')
+	compile('org.springframework.boot:spring-boot-starter-web'){
+        exclude module: 'org.springframework.boot:spring-boot-starter-logging'
+    }
+    compile('org.springframework.boot:spring-boot-starter-aop')
+    compile('org.springframework.boot:spring-boot-starter-actuator')
+    compile("org.springframework.boot:spring-boot-starter-jetty")
+    compile("org.springframework.boot:spring-boot-starter-data-rest")
+  //  compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    compile("org.springframework.boot:spring-boot-configuration-processor")
+    compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+    compile("org.apache.httpcomponents:httpcore:4.4.1")
+    compile("org.apache.httpcomponents:httpclient:4.5")
+    compile("commons-io:commons-io:2.4")
+    compile("net.sf.json-lib:json-lib:2.4:jdk15")
+    compile("com.alibaba:fastjson:1.2.29")
+    compile("com.google.collections:google-collections:1.0")
+    compile("org.springframework.boot:spring-boot-devtools")
+    compile("org.projectlombok:lombok")
+    compile("org.springframework.boot:spring-boot-starter-cache")
+
+	testCompile('org.springframework.boot:spring-boot-starter-test') 
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+}

@@ -1,0 +1,25 @@
+#server
+server:
+  port: 8787 
+  context-path: /file
+  
+
+
+#mongodb config
+spring:
+  data:
+    mongodb: 
+      host: 192.168.22.209
+      port: 27017
+      database: cloudWork
+      grid-fs-database: kingdeeMongo
+
+  cache:
+    ehcache:
+      config: classpath:config/ehcache.xml  
+
+
+
+#loging
+logging: 
+  config: classpath:config/logback-spring.xml
