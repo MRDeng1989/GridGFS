@@ -222,7 +222,7 @@ public class FileController {
     
     
     /**
-     * @title 在线预览GridFS系统里面的图片(只能访问部分图片，勿使用)
+     * @title 在线预览GridFS系统里面的图片(勿使用 只能下载部分<=256kb)
      * @param gridFSFileId
      * @return
      * @throws IOException
@@ -233,6 +233,7 @@ public class FileController {
     	if (gridFSFile != null) {
     		ByteArrayOutputStream outputStream = new ByteArrayOutputStream((int) gridFSFile.getChunkSize());
     		gridFSFile.writeTo(outputStream);
+    		outputStream.flush(); 
             return ResponseEntity
                     .ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "fileName=\"" + gridFSFile.getFilename() + "\"")
@@ -248,7 +249,7 @@ public class FileController {
     
     
     /**
-     * @title 从mongdbGridFS 下载文件(勿使用，只能下载256Kb)
+     * @title 从mongdbGridFS 下载文件(勿使用 只能下载部分<=256kb)
      * @param fileId
      * @return
      * @throws IOException
@@ -259,6 +260,7 @@ public class FileController {
         if (gridfs != null) {
         	ByteArrayOutputStream outputStream = new ByteArrayOutputStream((int) gridfs.getChunkSize());
         	gridfs.writeTo(outputStream);
+        	outputStream.flush();  
             return ResponseEntity
                     .ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; fileName=\"" + gridfs.getFilename() + "\"")
