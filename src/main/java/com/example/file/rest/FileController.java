@@ -248,28 +248,6 @@ public class FileController {
     
     
     /**
-     * @title 访问图片 在线预览GridFS系统里面的图片
-     * @param fileId
-     * @param request
-     * @param response
-     */
-    @RequestMapping(value = "/image/{fileId}")
-    public void getImage(@PathVariable String fileId, HttpServletResponse response) {     
-    	try {
-	        GridFSDBFile gridfs = (GridFSDBFile) fileService.queryOneGridFSFile(fileId);
-	        response.setContentType(gridfs.getContentType());
-	        OutputStream out = response.getOutputStream();
-	        gridfs.writeTo(out);         
-	        out.flush();         
-	        out.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    
-    
-    
-    /**
      * @title 从mongdbGridFS 下载文件(勿使用，只能下载256Kb)
      * @param fileId
      * @return
@@ -290,6 +268,50 @@ public class FileController {
                     .body( outputStream.toByteArray());
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File was not fount");
+        }
+    }
+    
+    
+    /**
+     * @title 访问图片 在线预览GridFS系统里面的图片
+     * @param fileId
+     * @param request
+     * @param response
+     */
+    @GetMapping(value = "/image/{fileId}")
+    public void getImage(@PathVariable String fileId, HttpServletResponse response) {     
+    	try {
+	        GridFSDBFile gridfs = (GridFSDBFile) fileService.queryOneGridFSFile(fileId);
+	        if (null !=gridfs ) {
+	        	response.setContentType(gridfs.getContentType());
+	 	        OutputStream out = response.getOutputStream();
+	 	        gridfs.writeTo(out);         
+	 	        out.flush();         
+	 	        out.close();
+	        } else {
+	        	response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+	        }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
+    /**
+     * @title 从mongdbGridFS 下载文件（完全下载）
+     * @param fileId
+     * @param response
+     */
+    @GetMapping("/gfsfile")
+    public void downloadGfs(@RequestParam String fileId, HttpServletResponse response) {
+    	try {
+	        GridFSDBFile gridfs = (GridFSDBFile) fileService.queryOneGridFSFile(fileId);
+	        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; fileName=\"" + gridfs.getFilename() + "\"");
+	        response.setHeader(HttpHeaders.CONTENT_TYPE, "application/octet-stream");
+	        gridfs.writeTo(response.getOutputStream());         
+	        response.flushBuffer();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
