@@ -168,6 +168,11 @@ public class FileController {
 		}
     }
     
+    /**
+     * @title 上传文件到GridFS文件系统
+     * @param file
+     * @return
+     */
     @PostMapping("/uploadgfs")
     public ResponseEntity<String> uploadGfs(@RequestParam("file") MultipartFile file){
     	try {
@@ -183,6 +188,11 @@ public class FileController {
     	}
     }
     
+    /**
+     * @title 查询GridFS文件系统里的文件
+     * @param gridFSFileId
+     * @return
+     */
     @GetMapping("/getgfs")
     public ResponseEntity<String> queryOneGfs(@RequestParam String gridFSFileId){
     	GridFSFile gridFSFile = fileService.queryOneGridFSFile(gridFSFileId);
@@ -190,6 +200,11 @@ public class FileController {
     }
     
     
+    /**
+     * @title 删除GridFS文件系统里的文件
+     * @param gridFSFileId
+     * @return
+     */
     @PostMapping("/deletegfs")
     public ResponseEntity<String> deleteOneGfs(@RequestParam String gridFSFileId){
     	fileService.deleteOneGridFSFile(gridFSFileId);
