@@ -1,8 +1,6 @@
 package com.example.file.rest;
 
-import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.security.NoSuchAlgorithmException;
@@ -266,6 +264,32 @@ public class FileController {
 	        out.close();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+    
+    
+    
+    /**
+     * @title 从mongdbGridFS 下载文件(勿使用，只能下载256Kb)
+     * @param fileId
+     * @return
+     * @throws IOException
+     */
+    @GetMapping("/gfsfile/{id}")
+    public ResponseEntity<Object> download(@PathVariable("id") String fileId) throws IOException{
+    	GridFSDBFile gridfs = (GridFSDBFile) fileService.queryOneGridFSFile(fileId);
+        if (gridfs != null) {
+        	ByteArrayOutputStream outputStream = new ByteArrayOutputStream((int) gridfs.getChunkSize());
+        	gridfs.writeTo(outputStream);
+            return ResponseEntity
+                    .ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; fileName=\"" + gridfs.getFilename() + "\"")
+                    .header(HttpHeaders.CONTENT_TYPE, "application/octet-stream" )
+                    .header(HttpHeaders.CONTENT_LENGTH, gridfs.getChunkSize()+"")
+                    .header("Connection",  "close") 
+                    .body( outputStream.toByteArray());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File was not fount");
         }
     }
 

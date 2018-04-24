@@ -16,7 +16,11 @@ spring:
 
   cache:
     ehcache:
-      config: classpath:config/ehcache.xml  
+      config: classpath:config/ehcache.xml 
+  http:
+    multipart:
+      max-file-size: 20Mb 
+      max-request-size: 20Mb
 
 
 
