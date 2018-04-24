@@ -1,9 +1,15 @@
 package com.example.file.rest;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.UUID;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +32,7 @@ import com.example.file.service.IFileService;
 import com.example.file.util.MD5Util;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSFile;
 
 @RestController
@@ -196,7 +203,11 @@ public class FileController {
     @GetMapping("/getgfs")
     public ResponseEntity<String> queryOneGfs(@RequestParam String gridFSFileId){
     	GridFSFile gridFSFile = fileService.queryOneGridFSFile(gridFSFileId);
-    	return ResponseEntity.status(HttpStatus.OK).body(gridFSFile.getFilename());
+    	if (gridFSFile != null) {
+    		return ResponseEntity.status(HttpStatus.OK).body(gridFSFile.getFilename());
+    	}else {
+    		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File was not fount");
+    	}
     }
     
     
@@ -209,6 +220,53 @@ public class FileController {
     public ResponseEntity<String> deleteOneGfs(@RequestParam String gridFSFileId){
     	fileService.deleteOneGridFSFile(gridFSFileId);
     	return ResponseEntity.status(HttpStatus.OK).body("delelte successfully");
+    }
+    
+    
+    /**
+     * @title 在线预览GridFS系统里面的图片(只能访问部分图片，勿使用)
+     * @param gridFSFileId
+     * @return
+     * @throws IOException
+     */
+    @GetMapping("/view/gfs")
+    public ResponseEntity<Object> viewOnLine(@RequestParam String gridFSFileId) throws IOException{
+    	GridFSDBFile gridFSFile = (GridFSDBFile) fileService.queryOneGridFSFile(gridFSFileId);
+    	if (gridFSFile != null) {
+    		ByteArrayOutputStream outputStream = new ByteArrayOutputStream((int) gridFSFile.getChunkSize());
+    		gridFSFile.writeTo(outputStream);
+            return ResponseEntity
+                    .ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "fileName=\"" + gridFSFile.getFilename() + "\"")
+                    .header(HttpHeaders.CONTENT_TYPE, gridFSFile.getContentType() )
+                    .header(HttpHeaders.CONTENT_LENGTH, gridFSFile.getChunkSize()+"")
+                    .header("Connection",  "keep-alive") 
+                    .header("numChunks", gridFSFile.numChunks()+"")
+                    .body( outputStream.toByteArray());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File was not fount");
+        }
+    }
+    
+    
+    /**
+     * @title 访问图片 在线预览GridFS系统里面的图片
+     * @param fileId
+     * @param request
+     * @param response
+     */
+    @RequestMapping(value = "/image/{fileId}")
+    public void getImage(@PathVariable String fileId, HttpServletResponse response) {     
+    	try {
+	        GridFSDBFile gridfs = (GridFSDBFile) fileService.queryOneGridFSFile(fileId);
+	        response.setContentType(gridfs.getContentType());
+	        OutputStream out = response.getOutputStream();
+	        gridfs.writeTo(out);         
+	        out.flush();         
+	        out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
