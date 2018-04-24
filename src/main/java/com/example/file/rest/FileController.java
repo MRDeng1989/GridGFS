@@ -216,7 +216,7 @@ public class FileController {
      * @param gridFSFileId
      * @return
      */
-    @PostMapping("/deletegfs")
+    @PostMapping("/deletegfs") 
     public ResponseEntity<String> deleteOneGfs(@RequestParam String gridFSFileId){
     	fileService.deleteOneGridFSFile(gridFSFileId);
     	return ResponseEntity.status(HttpStatus.OK).body("delelte successfully");
