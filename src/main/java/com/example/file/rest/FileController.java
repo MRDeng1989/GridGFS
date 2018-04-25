@@ -244,7 +244,7 @@ public class FileController {
     		      baos.write(b);
     		}
     		byte[] buf = baos.toByteArray();*/
-    		
+    	
             return ResponseEntity
                     .ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "fileName=\"" + gridFSFile.getFilename() + "\"")
