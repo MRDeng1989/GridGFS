@@ -233,17 +233,17 @@ public class FileController {
     public ResponseEntity<Object> viewOnLine(@RequestParam String gridFSFileId) throws IOException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
     	GridFSDBFile gridFSFile = (GridFSDBFile) fileService.queryOneGridFSFile(gridFSFileId);
     	if (gridFSFile != null) {
-    		/*ByteArrayOutputStream outputStream = new ByteArrayOutputStream((int) gridFSFile.getChunkSize());
+    		ByteArrayOutputStream outputStream = new ByteArrayOutputStream((int) gridFSFile.getChunkSize());
     		gridFSFile.writeTo(outputStream);
-    		outputStream.flush(); */
-    		DataInputStream dis = new DataInputStream(gridFSFile.getInputStream());
+    		outputStream.flush(); 
+    		/*DataInputStream dis = new DataInputStream(gridFSFile.getInputStream());
     		ByteArrayOutputStream baos = new ByteArrayOutputStream();
     		while( dis.read()!=-1 ){
     		      byte[] b = new byte[dis.available()];
     		      dis.read(b);
     		      baos.write(b);
     		}
-    		byte[] buf = baos.toByteArray();
+    		byte[] buf = baos.toByteArray();*/
     		
             return ResponseEntity
                     .ok()
@@ -252,7 +252,7 @@ public class FileController {
                     .header(HttpHeaders.CONTENT_LENGTH, gridFSFile.getChunkSize()+"")
                     .header("Connection",  "Keep-Alive") 
                     .header("numChunks", gridFSFile.numChunks()+"")
-                    .body(buf);
+                    .body(outputStream.toByteArray());
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File was not fount");
         }
