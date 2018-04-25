@@ -40,12 +40,12 @@ public class FileController {
 	@Autowired
     private IFileService fileService;
     
-    @Value("${server.address:dengqw}")
+    @Value("${server.address:www.qingwen.com}")
     private String serverAddress;
     
     @Value("${server.port:9090}")
     private String serverPort;
-    
+    	
     @RequestMapping(value = "/")
     public String index(Model model) {
     	// 展示最新二十条数据
