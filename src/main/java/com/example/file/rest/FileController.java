@@ -65,7 +65,7 @@ public class FileController {
 	}
 			
     /**
-     * 获取文件片信息
+     * 获取文件片信息（只用于小文件）
      * @param id
      * @return
      */
