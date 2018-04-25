@@ -43,7 +43,7 @@ public class FileController {
     @Value("${server.address:www.qingwen.com}")
     private String serverAddress;
     
-    @Value("${server.port:0807}")
+    @Value("${server.port:0809}")
     private String serverPort;
     	
     @RequestMapping(value = "/")
