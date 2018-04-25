@@ -301,8 +301,8 @@ public class FileController {
 	 	        gridfs.writeTo(out);         
 	 	        out.flush();         
 	 	        out.close();
-	        } else {
-	        	response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+	        } else { 
+	        	response.setStatus( HttpServletResponse.SC_NOT_FOUND);
 	        }
         } catch (Exception e) {
             e.printStackTrace();
