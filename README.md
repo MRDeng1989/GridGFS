@@ -8,3 +8,8 @@ Mongodb支持多种数据格式的存储，对于二进制的存储Mongodb数据
 
 鉴于Mongodb的BSON文档的数据量大小的限制（每个文档不超过16M），所有本文的文件服务器补充了Mongodb GridFS文件存储。
 
+## mongodbGFS
+
+上传图片：http://localhost:8788/file/uploadgfs
+在线预览图片：http://localhost:8788/file/image/5ae17d5829bbf60798c6b618
+

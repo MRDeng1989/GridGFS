@@ -12,7 +12,7 @@ spring:
       host: 192.168.22.209
       port: 27017
       database: cloudWork
-      grid-fs-database: kingdeeMongo
+      grid-fs-database: bulletinFile
 
   cache:
     ehcache:
