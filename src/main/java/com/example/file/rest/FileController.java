@@ -217,45 +217,6 @@ public class FileController {
     	return ResponseEntity.status(HttpStatus.OK).body("delelte successfully");
     }
     
-    /**
-     * @title 在线预览GridFS系统里面的图片(勿使用 只能下载部分<=256kb)
-     * @param gridFSFileId
-     * @return
-     * @throws IOException
-     * @throws SecurityException 
-     * @throws NoSuchMethodException 
-     * @throws InvocationTargetException 
-     * @throws IllegalArgumentException 
-     * @throws IllegalAccessException 
-     */
-    @GetMapping("/view/gfs")
-    public ResponseEntity<Object> viewOnLine(@RequestParam String gridFSFileId) throws IOException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-    	GridFSDBFile gridFSFile = (GridFSDBFile) fileService.queryOneGridFSFile(gridFSFileId);
-    	if (gridFSFile != null) {
-    		ByteArrayOutputStream outputStream = new ByteArrayOutputStream((int) gridFSFile.getChunkSize());
-    		gridFSFile.writeTo(outputStream);
-    		outputStream.flush(); 
-    		/*DataInputStream dis = new DataInputStream(gridFSFile.getInputStream());
-    		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    		while( dis.read()!=-1 ){
-    		      byte[] b = new byte[dis.available()];
-    		      dis.read(b);
-    		      baos.write(b);
-    		}
-    		byte[] buf = baos.toByteArray();*/
-    	
-            return ResponseEntity
-                    .ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "fileName=\"" + gridFSFile.getFilename() + "\"")
-                    .header(HttpHeaders.CONTENT_TYPE, gridFSFile.getContentType() )
-                    .header(HttpHeaders.CONTENT_LENGTH, gridFSFile.getChunkSize()+"")
-                    .header("Connection",  "Keep-Alive") 
-                    .header("numChunks", gridFSFile.numChunks()+"")
-                    .body(outputStream.toByteArray());
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File was not fount");
-        }
-    }
     
     
     /**
