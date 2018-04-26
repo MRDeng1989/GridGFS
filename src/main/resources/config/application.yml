@@ -1,6 +1,6 @@
 #server
 server:
-  port: 8787 
+  port: 8788 
   context-path: /file
   
 
