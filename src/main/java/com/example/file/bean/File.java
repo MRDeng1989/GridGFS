@@ -4,11 +4,17 @@ import java.io.Serializable;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 
 @Document(collection = "T_File")
+@CompoundIndexes({@CompoundIndex(name = "file_id_name",def = "{'id':1, 'name':1 }"),
+	@CompoundIndex(name = "file_name_uploadDate",def = "{'name':1 , 'uploadDate': 1}")})
 public class File implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
 	@Id  // 主键
 	private String id;
     private String name; // 文件名称
